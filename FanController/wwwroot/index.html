@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EZFAN</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header>
+  <div>
+    <h1 class="brand">EZ<span>FAN</span></h1>
+    <div class="sub" id="saveState">Chargement...</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="profiles" id="profiles"></div>
+  <button id="profileMenu" title="Gérer les profils">⋯</button>
+</header>
+<div id="warnings"></div>
+<div id="safety" class="safety" hidden>Sécurité active : température critique, tous les ventilos pilotés sont à 100 %.</div>
+<nav class="tabs">
+  <button data-tab="case" class="on">Boîtier</button>
+  <button data-tab="fans">Ventilos</button>
+  <button data-tab="curves">Courbes</button>
+  <button data-tab="sensors">Sondes et réglages</button>
+</nav>
+<main>
+  <section id="tab-case"><div id="caseRoot"></div></section>
+
+  <section id="tab-fans" hidden>
+    <div class="grid" id="fans"></div>
+    <details id="spareBox" hidden>
+      <summary>Prises non branchées</summary>
+      <div class="grid" id="spare"></div>
+    </details>
+  </section>
+
+  <section id="tab-curves" hidden>
+    <div class="curves-layout">
+      <aside>
+        <div id="curveList"></div>
+        <button id="addCurve" class="wide">+ Nouvelle courbe</button>
+      </aside>
+      <div class="editor" id="editor"></div>
+    </div>
+  </section>
+
+  <section id="tab-sensors" hidden>
+    <h2>Démarrage</h2>
+    <div class="card">
+      <label class="check"><input type="checkbox" id="autostart"> Démarrer avec Windows</label>
+      <p class="muted" id="autostartText">L'appli se lance en arrière-plan à l'ouverture de ta session, avec une icône près de l'horloge.</p>
+    </div>
+    <h2>Sécurité</h2>
+    <div class="card safety-card" id="safetyForm"></div>
+    <h2>Toutes les sondes</h2>
+    <div class="list" id="temps"></div>
+    <h2>Vitesses lues</h2>
+    <div class="list" id="rpms"></div>
+  </section>
+</main>
+
+<dialog id="profileDialog">
+  <form method="dialog">
+    <h3>Profils</h3>
+    <p class="muted">Chaque profil garde ses propres courbes et ses réglages de ventilos.</p>
+    <label>Nom du nouveau profil <input id="newProfileName" placeholder="Jeu, Nuit..."></label>
+    <div class="row gap">
+      <button value="dup" id="dupProfile">Copier le profil actuel</button>
+      <button value="del" id="delProfile" class="danger">Supprimer le profil actuel</button>
+      <button value="close">Fermer</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="wizard" class="wizard"></dialog>
+
+<script src="cases.js"></script>
+<script src="casegeo.js"></script>
+<script src="app.js"></script>
+<script src="case.js"></script>
+<script src="wizard.js"></script>
+</body>
+</html>

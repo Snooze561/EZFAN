@@ -1,0 +1,18 @@
+# Build .NET
+bin/
+obj/
+publish/
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+
+# Binaires et archives
+*.exe
+*.dll
+*.pdb
+*.zip
+
+# Journaux
+*.log
