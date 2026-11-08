@@ -18,9 +18,9 @@ Contrôleur de ventilateurs pour Windows, pensé pour être simple et visuel : t
 
 ## Installation
 
-1. Installe le pilote **PawnIO** depuis [pawnio.eu](https://pawnio.eu). Il est nécessaire pour lire les sondes et piloter les ventilateurs.
-2. Télécharge `EZFAN.exe` depuis la page [Releases](../../releases) (ou compile-le, voir plus bas).
-3. Lance `EZFAN.exe`. Il demande les **droits administrateur**, c'est normal : l'accès au matériel l'exige.
+1. Installe le pilote **PawnIO** (nécessaire pour lire les sondes et piloter les ventilateurs) : ouvre **Terminal** et tape `winget install namazso.PawnIO`, ou télécharge-le sur [pawnio.eu](https://pawnio.eu).
+2. Télécharge `EZFAN-Setup-….exe` depuis la page [Releases](../../releases) et lance-le. (Sans installation : prends le `.zip`, décompresse-le et garde `EZFAN.exe` à côté du dossier `wwwroot`.)
+3. Lance EZFAN. Il demande les **droits administrateur**, c'est normal : l'accès au matériel l'exige.
 4. L'interface s'ouvre dans ton navigateur sur `http://localhost:5400`. Au premier lancement, l'assistant te guide.
 
 Si tu utilisais déjà Fan Control ou un autre logiciel de ventilation, ferme-le avant : deux logiciels qui pilotent les mêmes ventilateurs se gênent.
@@ -36,7 +36,9 @@ cd FanController
 dotnet publish -c Release
 ```
 
-Le fichier `EZFAN.exe` (autonome, un seul fichier, Windows x64) se trouve ensuite dans `FanController/bin/Release/net8.0-windows/win-x64/publish/`.
+Le fichier `EZFAN.exe` (autonome, Windows x64) et son dossier `wwwroot` se trouvent ensuite dans `FanController/bin/Release/net8.0-windows/win-x64/publish/`.
+
+GitHub Actions compile aussi l'app à chaque modification ; créer une release `vX.Y.Z` y joint automatiquement l'installateur et le zip.
 
 ## Structure
 

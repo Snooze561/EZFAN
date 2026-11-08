@@ -1,0 +1,62 @@
+name: Compilation
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Numéro de version
+        id: version
+        shell: pwsh
+        run: |
+          if ("${{ github.ref }}" -like "refs/tags/v*") {
+            $v = "${{ github.ref_name }}".TrimStart("v")
+          } else {
+            $v = ([xml](Get-Content FanController/FanController.csproj)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+          }
+          "value=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Compiler l'application
+        run: dotnet publish FanController/FanController.csproj -c Release -p:Version=${{ steps.version.outputs.value }} -o publish
+
+      - name: Construire l'installateur
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DAppVersion=${{ steps.version.outputs.value }}" installer\EZFAN.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Préparer la version sans installation (zip)
+        shell: pwsh
+        run: Compress-Archive -Path publish\EZFAN.exe, publish\wwwroot -DestinationPath out\EZFAN-${{ steps.version.outputs.value }}.zip
+
+      - name: Mettre l'installateur en téléchargement
+        uses: actions/upload-artifact@v4
+        with:
+          name: EZFAN-Setup
+          path: out/*.exe
+
+      - name: Publier la version sur GitHub
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: EZFAN ${{ steps.version.outputs.value }}
+          files: |
+            out/*.exe
+            out/*.zip
+          generate_release_notes: true
